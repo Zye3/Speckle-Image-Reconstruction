@@ -11,23 +11,6 @@ import os
 def optimizer():
     return
 
-
-def save_metrics(model_type, code_length, lr, batch_size, epochs,
-                 test_size, val_size, model, total_time, log_dir, epoch, train_loss, val_loss):
-    """
-    Save the train hyperparameter to a text file.
-    将超参数保存到一个文本文件中。
-    """
-    with open(os.path.join(log_dir, 'metrics.txt'), 'w') as f:
-        f.write(f'model_type:{model_type}\n'
-                f'code_length:{code_length}\n'
-                f'lr:{lr}, batch_size:{batch_size}, epochs:{epochs},\n'
-                f'best model in Epoch:{epoch} with loss {train_loss:.8f},{val_loss:.8f}\n\n'
-                f'test_size:{test_size},val_size:{val_size}\n'
-                f'model:{model},\n'
-                f'Training Time:{total_time:.3f}')
-
-
 def select_model(model_type, device):
     """
     Select the model based on the specified type.
@@ -129,58 +112,3 @@ def validate_model(model, model_type, val_loader, criterion, device):
     return avg_val_loss
 
 
-def export_to_onnx(model, batch_size, input_size, model_type, log_dir, device):
-    # Set the model to evaluation mode
-    model.eval()
-
-    input = (batch_size, 1, input_size, input_size)
-
-    # Create a dummy input tensor appropriate for the model
-    dummy_input = torch.randn(input, device=device)
-
-    # Define the filename for the ONNX model
-    onnx_file_name = f'{log_dir}/{model_type}.onnx'
-
-    # Export the model to an ONNX file
-    torch.onnx.export(model, dummy_input, onnx_file_name, export_params=True, opset_version=10,
-                      do_constant_folding=True, input_names=['input'], output_names=['output'],
-                      dynamic_axes={'input': {0: 'batch_size'}, 'output': {0: 'batch_size'}})
-
-    print(f'Model has been exported to ONNX format and saved to {onnx_file_name}')
-
-
-def vis_batch(data, label, output, epoch, batch_idx, normalize_factor, log_dir, num_imgs_to_visualize=4):
-    """
-    Visualize a batch of images during training.
-    在训练过程中可视化一批图像。
-    参数:
-    - data: 输入数据
-    - label: 标签数据
-    - output: 模型输出
-    - batch_idx: 批处理索引
-    """
-    # Visualization Part
-    # if batch_idx % 1 == 0:  # Visualize the first batch
-
-    if batch_idx == 0:  # Visualize the first batch
-        fig, axes = plt.subplots(3, num_imgs_to_visualize, figsize=(24, 18))
-        for img_index in range(num_imgs_to_visualize):
-            # Normalize and display data, label, output images
-            norm_data = (normalize_factor * data[img_index]).cpu().detach().squeeze()
-            norm_label = (label[img_index]).cpu().detach().squeeze()
-            norm_output = (normalize_factor * output[img_index]).cpu().detach().squeeze()
-
-            axes[0, img_index].imshow(norm_data, cmap='gray')
-            axes[1, img_index].imshow(norm_label, cmap='gray')
-            axes[2, img_index].imshow(norm_output, cmap='gray')
-
-            # Set titles and turn off axis
-            axes[0, img_index].set_title(f'Input {img_index}', fontsize=18)
-            axes[1, img_index].set_title(f'Label {img_index}', fontsize=18)
-            axes[2, img_index].set_title(f'Reconstructed {img_index}', fontsize=18)
-            axes[0, img_index].axis('off')
-            axes[1, img_index].axis('off')
-            axes[2, img_index].axis('off')
-        plt.suptitle(f'Visualization for Epoch {epoch}, Batch {batch_idx}', fontsize=18)
-
-        plt.savefig(f'{log_dir}/Epoch_{epoch}_batch_{batch_idx}.png')

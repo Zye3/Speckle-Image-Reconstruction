@@ -17,31 +17,6 @@ class DatasetProcessor:
         if not os.path.exists(log_dir):
             os.makedirs(log_dir)
 
-    def plot_sample_images(self, speckle_images, original_images, index, log_dir, name:str, figsize=(12, 6), cmap='gray'):
-        """
-        Plots and saves a comparison of speckle and original images.
-
-        Parameters:
-            speckle_images (np.array): The speckle images array.
-            original_images (np.array): The original images array.
-            index (int): The index of the images to display.
-            log_dir (str): Directory where to save the image.
-            figsize (tuple): Size of the figure (width, height).
-            cmap (str): Colormap for displaying images.
-        """
-
-        # print(
-        #     f'Plot Sample before training:{speckle_images[index].shape}-> {np.squeeze(speckle_images[index]).shape}\n')
-        fig, axes = plt.subplots(1, 2, figsize=figsize)
-        im1 = axes[0].imshow(np.squeeze(speckle_images[index]), cmap=cmap)
-        axes[0].set_title(f'Speckle Image of {name}')
-        axes[0].axis('off')
-
-        im2 = axes[1].imshow(np.squeeze(original_images[index]), cmap=cmap)
-        axes[1].set_title(f'Original Image of {name}')
-        axes[1].axis('off')
-
-        fig.savefig(f'{log_dir}/before_train_image_of_{name}.png')
 
     def split_data(self, X, Y, index, test_size, val_size):
         """
@@ -93,14 +68,9 @@ class DatasetProcessor:
             speckle_images.append(speckle_image)
             original_images.append(original_image)
 
-        # print(f'speckle_image.shape:{speckle_images[1], type(speckle_images)}')
-        # print(f'original_image.shape:{original_images[1], type(speckle_images)}')
 
         speckle_images = np.array(speckle_images)  # Convert list to array
         original_images = np.array(original_images)  # Convert list to array
-
-        # print(f'After speckle_image.shape:{speckle_images.shape, type(speckle_images)}')
-        # print(f'After original_image.shape:{original_images.shape, type(original_images)}\n')
         return speckle_images, original_images
 
     # Function to load and preprocess the dataset
@@ -145,12 +115,6 @@ class DatasetProcessor:
 
             X_val, X_test, Y_val, Y_test = speckle_images_val, original_images_val, speckle_images_test, original_images_test
 
-
-        # Display the train validation and test image before train
-        self.plot_sample_images(X_train, Y_train, 1, self.log_dir,name='train')
-        self.plot_sample_images(X_val, Y_val, 2, self.log_dir,name='validation')
-        self.plot_sample_images(X_test, Y_test, 3, self.log_dir,name='test')
-
         # Convert np.array to tensors, and then to TensorDataset
         train_dataset = TensorDataset(torch.tensor(X_train), torch.tensor(Y_train))
         val_dataset = TensorDataset(torch.tensor(X_val), torch.tensor(Y_val))
@@ -160,10 +124,7 @@ class DatasetProcessor:
         train_loader = DataLoader(train_dataset, batch_size=self.batch_size, shuffle=True)
         val_loader = DataLoader(val_dataset, batch_size=self.batch_size, shuffle=False)
         test_loader = DataLoader(test_dataset, batch_size=self.batch_size, shuffle=False)
-        # Print the shape of the datasets
-        print(f'Train DataLoader batch shape: {next(iter(train_loader))[0].shape}')
-        print(f'Validation DataLoader batch shape: {next(iter(val_loader))[0].shape}')
-        print(f'Test DataLoader batch shape: {next(iter(test_loader))[0].shape}\n')
+
 
         return train_loader, val_loader, test_loader
 

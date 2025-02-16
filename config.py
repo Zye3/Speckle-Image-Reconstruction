@@ -6,12 +6,9 @@ import os
 def parse_args():
     # Absolute path to the directory of the current script
     script_dir = os.path.dirname(os.path.abspath(__file__))
-            # 8.Speckle_64_64_Digits , 7.Speckle_64_64
     parser = argparse.ArgumentParser(description='Train a model on speckle image reconstruction.')
     parser.add_argument('--data_dir', nargs=3, type=str,
-                        default=[os.path.join(script_dir.split('2.')[0], "1.Data", "7.Speckle_64_64", "speckles_64.npy"),
-                                 os.path.join(script_dir.split('2.')[0], "1.Data", "7.Speckle_64_64", "label_64.npy"),
-                                 os.path.join(script_dir.split('2.')[0], "1.Data", "7.Speckle_64_64", "index.npy")],
+                        default=[],
                         help='Directory where datasets are saved.')
 
     parser.add_argument('--model_type', type=str,

@@ -150,8 +150,10 @@ def main():
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     # Load the model !!! Note: replace the mode_type in the config,py first
-    # model_path = f''
-    model_path = (f'')
+    model_path = (f'runs/'
+                  f'Multi_64_64_0.2_0.1/'
+                  f'Att_UNet_64_0.001_48_90_0.1&0.2_2024-08-15__21-28-29/'
+                  f'{args.model_type}.pth')
     model = load_model(model_path, args.model_type, device)
 
     # load log_dir

@@ -18,7 +18,7 @@ Our approach first characterises the MMF and retrieves images using a Real-Vaule
 | AE-SNN        | 0.9364  | 16.0765 |
 | U-Net         | 0.9368  | 32.7797 |
 | Att-U-Net     | 0.9404  | 32.2254 |
-| HPM-Att-U-Net(_Ours_) | 0.9524  | 33.2440 |
+| HPM-Att-U-Net(__Ours__) | __0.9524__  | __33.2440__ |
 
 Please cite the following paper when using this code:
 1. Z. Ju, Z. Yu, Z. Meng, N. Zhan, L. Gui, K. Xu, Simultaneous illumination and imaging based on a single multimode fibre, Opt. Express 30 (9) (2022) 15596.

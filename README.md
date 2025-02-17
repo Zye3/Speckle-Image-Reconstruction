@@ -61,12 +61,8 @@ Below are several deep learning models to choose from __[model.py](https://githu
 ## Citation
 
 Please cite the following paper when using this code:
-1. Z. Ju, Z. Yu, Z. Meng, N. Zhan, L. Gui, K. Xu, Simultaneous illumination and imaging based on a single multimode fibre, Opt. Express 30 (9) (2022) 15596.
-2. Y. Li, Z. Yu, Y. Chen, T. He, J. Zhang, R. Zhao, K. Xu, Image Reconstruction Using Pre-Trained Autoencoder on Multimode Fiber Imaging System, IEEE Photonics Technol. Lett. 32 (13) (2020) 779–782.
-3. H. Chen, Z. He, Z. Zhang, Y. Geng, W. Yu, Binary amplitude-only image reconstruction through an MMF based on an AE-SNN combined deep learning model, Opt. Express 28 (20) (2020) 30048–30062.
-4. O. Ozan, J. Schlemper, L., L. Folgoc, M. Lee, M. Heinrich, K. Misawa, K. Mori et al. "Attention U-Net: Learning Where to Look for the Pancreas." CVPR, (2018).
-5. O. Ronneberge, P. Fischer, and T. Brox, “U-Net: Convolutional Networks for Biomedical Image.
-6. T. Zhao, S. Ourselin, T. Vercauteren and W. Xia. “Seeing through multimode fibers with real-valued intensity transmission matrices,” Optics Express 28, 20978 – 20991 (2020).
+1.T. Zhao, S. Ourselin, T. Vercauteren and W. Xia. “Seeing through multimode fibers with real-valued intensity transmission matrices,” Optics Express 28, 20978 – 20991 (2020).
+2.Coming Soon
 
 
 

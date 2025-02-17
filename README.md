@@ -10,16 +10,17 @@ O. Ozan, J. Schlemper, L., L. Folgoc, M. Lee, M. Heinrich, K. Misawa, K. Mori et
 O. Ronneberge, P. Fischer, and T. Brox, “U-Net: Convolutional Networks for Biomedical Image.
 
 1. Real-Vauled Intensity Transmission Matrix for image retrieval __[Matlab Code Here](https://github.com/Zye3/Speckle-Image-Reconstruction/blob/master/calculate_RVITM.m)__
+| RVITM         | 0.1665  | 9.8718  |
 
-2. Deep learning for image reconstruction
-Model	SSIM	PSNR
-RVITM	0.1665	9.8718
-FC-AE	0.7531	12.3864
-CNN-AE	0.8550	25.5408
-AE-SNN	0.9364	16.0765
-U-Net	0.9368	32.7797
-Att-U-Net	0.9404	32.2254
-HPM-Att-U-Net	0.9524	33.2440
+3. Deep learning for image reconstruction
+| Model         | SSIM    | PSNR    |
+|---------------|---------|---------|
+| FC-AE         | 0.7531  | 12.3864 |
+| CNN-AE        | 0.8550  | 25.5408 |
+| AE-SNN        | 0.9364  | 16.0765 |
+| U-Net         | 0.9368  | 32.7797 |
+| Att-U-Net     | 0.9404  | 32.2254 |
+| HPM-Att-U-Net | 0.9524  | 33.2440 |
 
 
 

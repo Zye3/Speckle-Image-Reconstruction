@@ -11,10 +11,11 @@ O. Ronneberge, P. Fischer, and T. Brox, “U-Net: Convolutional Networks for Bio
 
 1. Real-Vauled Intensity Transmission Matrix for image retrieval __[Matlab Code Here](https://github.com/Zye3/Speckle-Image-Reconstruction/blob/master/calculate_RVITM.m)__
 
+| Model         | SSIM    | PSNR    |
+|---------------|---------|---------|
 | RVITM         | 0.1665  | 9.8718  |
 
-3. Deep learning for image reconstruction
-
+2. Deep learning for image reconstruction
 | Model         | SSIM    | PSNR    |
 |---------------|---------|---------|
 | FC-AE         | 0.7531  | 12.3864 |
@@ -22,7 +23,7 @@ O. Ronneberge, P. Fischer, and T. Brox, “U-Net: Convolutional Networks for Bio
 | AE-SNN        | 0.9364  | 16.0765 |
 | U-Net         | 0.9368  | 32.7797 |
 | Att-U-Net     | 0.9404  | 32.2254 |
-| HPM-Att-U-Net | 0.9524  | 33.2440 |
+| HPM-Att-U-Net(_Ours_) | 0.9524  | 33.2440 |
 
 
 

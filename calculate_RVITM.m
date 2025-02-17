@@ -3,8 +3,8 @@ clc
 clear all
 close all
 % Weight_Matrix for image recovery
-% Author: Tianrui Zhao King's College London
-% 07/08/2019
+% Author: Ziyu Ye King's College London
+% 07/08/2024
 DMD = 64; % change the input pattern size
 Input = hadamard(DMD^2);  % [img_size,img_size,Number = img_size^2x2]
 Input1 = single([Input > 0]);

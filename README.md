@@ -16,6 +16,7 @@ O. Ronneberge, P. Fischer, and T. Brox, “U-Net: Convolutional Networks for Bio
 | RVITM         | 0.1665  | 9.8718  |
 
 2. Deep learning for image reconstruction
+
 | Model         | SSIM    | PSNR    |
 |---------------|---------|---------|
 | FC-AE         | 0.7531  | 12.3864 |

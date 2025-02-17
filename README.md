@@ -4,6 +4,9 @@
 ## Overview
 Our approach first characterizes the multimode fiber (**MMF**) to retrieve images using a **Real-Valued Intensity Transmission Matrix (RVITM)** algorithm. We then refine the reconstructions with a **Hierarchical, Parallel Multi-Scale (HPM) Attention U-Net** to further improve image quality. Experimental results demonstrate that our approach achieves high-quality reconstructions, with **Structural Similarity Index (SSIM)** and **Peak Signal-to-Noise Ratio (PSNR)** values of up to **0.9524** and **33.244 dB**, respectively.
 
+<img width="375" alt="image" src="https://github.com/user-attachments/assets/7f54798d-7132-4eb4-8f50-7b47590e0ae5" />
+
+
 ## System Requirements
 
 ### Operating System

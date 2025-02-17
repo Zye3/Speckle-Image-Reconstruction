@@ -66,6 +66,8 @@ Please cite the following paper when using this code:
 3. H. Chen, Z. He, Z. Zhang, Y. Geng, W. Yu, Binary amplitude-only image reconstruction through an MMF based on an AE-SNN combined deep learning model, Opt. Express 28 (20) (2020) 30048–30062.
 4. O. Ozan, J. Schlemper, L., L. Folgoc, M. Lee, M. Heinrich, K. Misawa, K. Mori et al. "Attention U-Net: Learning Where to Look for the Pancreas." CVPR, (2018).
 5. O. Ronneberge, P. Fischer, and T. Brox, “U-Net: Convolutional Networks for Biomedical Image.
+6. T. Zhao, S. Ourselin, T. Vercauteren and W. Xia. “Seeing through multimode fibers with real-valued intensity transmission matrices,” Optics Express 28, 20978 – 20991 (2020).
+
 
 
 

@@ -4,8 +4,6 @@
 ## Overview
 Our approach first characterizes the multimode fiber (**MMF**) to retrieve images using a **Real-Valued Intensity Transmission Matrix (RVITM)** algorithm. We then refine the reconstructions with a **Hierarchical, Parallel Multi-Scale (HPM) Attention U-Net** to further improve image quality. Experimental results demonstrate that our approach achieves high-quality reconstructions, with **Structural Similarity Index (SSIM)** and **Peak Signal-to-Noise Ratio (PSNR)** values of up to **0.9524** and **33.244 dB**, respectively.
 
----
-
 ## System Requirements
 
 ### Operating System
@@ -16,8 +14,6 @@ All networks have been tested on **Linux (Ubuntu 20.04)**, **Windows**, and **ma
 - **Supported Devices:** GPU, CPU, and Apple M1/M2  
 - **Training:** A GPU with at least **10 GB** of VRAM is recommended (e.g., **RTX 2080 Ti**, **RTX 3080/3090**, or **RTX 4080/4090**). Training on CPU or M1/M2 (**MPS**) will be significantly slower.  
 - **CPU Requirements:** At least 6 cores (12 threads) are recommended, especially for data augmentation when training. The faster the GPU, the more powerful the CPU should be.
-
----
 
 ## Installation Instructions
 
@@ -30,9 +26,10 @@ All networks have been tested on **Linux (Ubuntu 20.04)**, **Windows**, and **ma
    ```bash
    conda env create -f pytorch.yaml
    conda activate pytorch
-
-
->Note:You can use this __[yaml file](https://github.com/Zye3/Speckle-Image-Reconstruction/blob/master/pytorch.yaml)__ based on Python 3.9
+   
+>Note: If You Prefer pip
+```bash
+pip install -r requirements.txt
 
 ## Dataset
 You can download the dataset using this __[Google Drive link.](https://drive.google.com/drive/folders/1X6b-sYlbe0j2Sp6p-3X7M7HJE2f4iPwn)__

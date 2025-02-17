@@ -35,8 +35,9 @@ pip install -r requirements.txt
 ## Dataset
 You can download the dataset using this __[Google Drive link.](https://drive.google.com/drive/folders/1X6b-sYlbe0j2Sp6p-3X7M7HJE2f4iPwn)__
 
-## Real-Vauled Intensity Transmission Matrix for image retrieval __[Matlab Code Here](https://github.com/Zye3/Speckle-Image-Reconstruction/blob/master/calculate_RVITM.m)__
+## Real-Vauled Intensity Transmission Matrix for image retrieval 
 We use __RVITM__ to retrieve images through the MMF.
+__[Matlab Code Here](https://github.com/Zye3/Speckle-Image-Reconstruction/blob/master/calculate_RVITM.m)__
 
 | Model         | SSIM    | PSNR    |
 |---------------|---------|---------|

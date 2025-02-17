@@ -30,10 +30,10 @@ All networks have been tested on **Linux (Ubuntu 20.04)**, **Windows**, and **ma
 >Note: If You Prefer pip
 ```bash
 pip install -r requirements.txt
+```
 
 ## Dataset
 You can download the dataset using this __[Google Drive link.](https://drive.google.com/drive/folders/1X6b-sYlbe0j2Sp6p-3X7M7HJE2f4iPwn)__
-
 
 ## Real-Vauled Intensity Transmission Matrix for image retrieval __[Matlab Code Here](https://github.com/Zye3/Speckle-Image-Reconstruction/blob/master/calculate_RVITM.m)__
 We use __RVITM__ to retrieve images through the MMF.
@@ -43,7 +43,7 @@ We use __RVITM__ to retrieve images through the MMF.
 | RVITM         | 0.1665  | 9.8718  |
 
 ## Deep learning for image reconstruction
-Below are several deep learning models to choose from:
+Below are several deep learning models to choose from __[model.py](https://github.com/Zye3/Speckle-Image-Reconstruction/blob/master/model.py)__:
 
 | Model         | SSIM    | PSNR    |
 |---------------|---------|---------|

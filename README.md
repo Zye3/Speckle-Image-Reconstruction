@@ -61,6 +61,7 @@ Below are several deep learning models to choose from __[model.py](https://githu
 ## Citation
 
 Please cite the following paper when using this code:
+
 1.T. Zhao, S. Ourselin, T. Vercauteren and W. Xia. “Seeing through multimode fibers with real-valued intensity transmission matrices,” Optics Express 28, 20978 – 20991 (2020).
 
 2.Z. Ye, T. Zhao, and W. Xia, "Seeing through multimode fibers using real-valued intensity transmission matrix with deep learning," Opt. Express 33, 16222-16236 (2025)

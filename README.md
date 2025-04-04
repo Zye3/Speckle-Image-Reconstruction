@@ -1,4 +1,4 @@
-# __[Seeing Through Multimode Fibers Using a Real-Valued Intensity Transmission Matrix with Deep Learning]__(https://opg.optica.org/oe/fulltext.cfm?uri=oe-33-7-16222&id=569946)
+# [Seeing Through Multimode Fibers Using a Real-Valued Intensity Transmission Matrix with Deep Learning](https://opg.optica.org/oe/fulltext.cfm?uri=oe-33-7-16222&id=569946)
 **Ziyu Ye, Tianrui Zhao, Wenfeng Xia\***
 
 ## Overview

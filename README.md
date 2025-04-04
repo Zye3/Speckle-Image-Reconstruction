@@ -1,4 +1,4 @@
-# Seeing Through Multimode Fibers Using a Real-Valued Intensity Transmission Matrix with Deep Learning
+# __[Seeing Through Multimode Fibers Using a Real-Valued Intensity Transmission Matrix with Deep Learning]__(https://opg.optica.org/oe/fulltext.cfm?uri=oe-33-7-16222&id=569946)
 **Ziyu Ye, Tianrui Zhao, Wenfeng Xia\***
 
 ## Overview
@@ -62,7 +62,7 @@ Below are several deep learning models to choose from __[model.py](https://githu
 
 Please cite the following paper when using this code:
 1.T. Zhao, S. Ourselin, T. Vercauteren and W. Xia. “Seeing through multimode fibers with real-valued intensity transmission matrices,” Optics Express 28, 20978 – 20991 (2020).
-2.Coming Soon
+2.Z. Ye, T. Zhao, and W. Xia, "Seeing through multimode fibers using real-valued intensity transmission matrix with deep learning," Opt. Express 33, 16222-16236 (2025)
 
 
 

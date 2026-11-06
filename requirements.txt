@@ -1,0 +1,7 @@
+# Install a CUDA, MPS, or CPU PyTorch build from https://pytorch.org first.
+# Then: pip install -r requirements.txt
+numpy>=1.24
+matplotlib>=3.7
+scikit-image>=0.21
+opencv-python-headless>=4.8
+tensorboard>=2.14

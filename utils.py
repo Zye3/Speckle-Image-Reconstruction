@@ -1,11 +1,8 @@
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import numpy as np
-import matplotlib.pyplot as plt
-from pytorch_msssim import ssim
-from model import ConvAutoencoder, UNet, AutoEncoder, VAE, AE_SNN, Att_UNet, HPM_Attention_UNet
 import os
+
+import matplotlib.pyplot as plt
+import torch
+from model import ConvAutoencoder, UNet, AutoEncoder, AE_SNN, Att_UNet, HPM_Attention_UNet
 
 
 def optimizer():
@@ -26,8 +23,6 @@ def select_model(model_type, device):
         return AutoEncoder().to(device)
     elif model_type == 'AE-SNN':
         return AE_SNN().to(device)
-    elif model_type == 'VAE':
-        return VAE().to(device)
     elif model_type == 'Att_UNet':
         return Att_UNet().to(device)
     elif model_type == 'HPM_UNet':
@@ -40,50 +35,67 @@ def mse_loss(recon_x, x):
     return torch.mean((x - recon_x) ** 2)
 
 
-def ssim_loss(recon_x, x):
-    # Ensure the input tensors are floating point numbers
-    x = x.float()
-    recon_x = recon_x.float()
-
-    # Compute SSIM over the batch of images.
-    # ssim() returns values between -1 and 1, where 1 means perfect similarity.
-    # Therefore, we subtract the result from 1 to interpret the loss correctly:
-    # the lower the ssim_loss, the more similar y_pred is to y_true.
-    return 1.0 - ssim(x, recon_x, data_range=1.0, size_average=True)  # Ensure to match the data range if it's different
+def _as_float(value):
+    if torch.is_tensor(value):
+        return float(value.detach().cpu())
+    return float(value)
 
 
-def vae_loss(recon_x, x, z_mean, z_log_var, image_size, beta=10):
-    """
-    Compute the VAE loss function.
-    The first term represents the reconstruction likelihood and the other term ensures that our learned distribution q
-    is similar to the true prior distribution p.
-    Thus our total loss consists of two terms, one is reconstruction error and the other is KL-divergence loss:
-    Loss = L\left( {x, \hat x} \right) + \sum\limits_j {KL\left( {{q_j}\left( {z|x} \right)||p\left( z \right)} \right)}
+def vis_batch(data, label, output, epoch, batch_idx, normalize_factor, log_dir):
+    """Save the first sample of a batch: input, label, reconstruction."""
+    os.makedirs(log_dir, exist_ok=True)
+    fig, axes = plt.subplots(1, 3, figsize=(12, 4))
+    panels = (
+        ('Input', data),
+        ('Label', label),
+        ('Reconstructed', output),
+    )
+    for ax, (title, tensor) in zip(axes, panels):
+        image = tensor[0].detach().float().cpu().squeeze().numpy()
+        ax.imshow(image, cmap='gray', vmin=0, vmax=1)
+        ax.set_title(title)
+        ax.axis('off')
+    fig.suptitle(f'epoch {epoch} batch {batch_idx}')
+    fig.savefig(os.path.join(log_dir, f'vis_e{epoch}_b{batch_idx}.png'))
+    plt.close(fig)
 
-    Parameters:
-    - recon_x: reconstructed images.
-    - x: original images.
-    - z_mean: mean from the latent space.
-    - z_log_var: log variance from the latent space.
-    - image_size: the height/width of the images (assumed to be square).z
-    - beta: weighting factor for the KL divergence.
 
-    Returns:
-    - Total loss, reconstruction loss, and KL divergence loss.
-    """
-    # print(f"input image:{recon_x}\n"
-    #       f"label:{x}")
-    # Reconstruction loss (assuming the input is normalized to [0,1])
-    BCE = F.binary_cross_entropy(recon_x, x, reduction='sum')
-    # Scale the BCE loss to the same scale as the TensorFlow example
-    BCE = BCE * (image_size * image_size)
-    # KL divergence
-    KL_div = -0.5 * torch.sum(1 + z_log_var - z_mean.pow(2) - z_log_var.exp())
-    # Total loss with the weighted KL divergence
-    total_loss = BCE + beta * KL_div
-    # print("total_loss, BCE,KL:",total_loss,BCE,KL_div)
+def save_metrics(model_type, code_length, lr, batch_size, epochs, test_size, val_size,
+                 model, total_time, log_dir, current_epoch, train_loss, best_loss):
+    """Write the training summary next to the checkpoint."""
+    os.makedirs(log_dir, exist_ok=True)
+    path = os.path.join(log_dir, 'train_metrics.txt')
+    with open(path, 'w') as handle:
+        handle.write(
+            f'model_type: {model_type}\n'
+            f'code_length: {code_length}\n'
+            f'lr: {lr}\n'
+            f'batch_size: {batch_size}\n'
+            f'epochs: {epochs}\n'
+            f'test_size: {test_size}\n'
+            f'val_size: {val_size}\n'
+            f'best_epoch: {current_epoch}\n'
+            f'train_loss: {_as_float(train_loss)}\n'
+            f'val_loss: {_as_float(best_loss)}\n'
+            f'seconds: {total_time:.3f}\n'
+        )
+    print(f'wrote {path}')
 
-    return total_loss
+
+def export_to_onnx(model, batch_size, code_length, model_type, log_dir, device):
+    """Export one sample. A missing ONNX package does not fail training."""
+    os.makedirs(log_dir, exist_ok=True)
+    path = os.path.join(log_dir, f'{model_type}.onnx')
+    sample = torch.rand(1, 1, int(code_length), int(code_length), device=device)
+    model.eval()
+    try:
+        torch.onnx.export(
+            model, sample, path,
+            input_names=['input'], output_names=['output'],
+        )
+        print(f'wrote {path}')
+    except Exception as exc:
+        print(f'onnx export skipped: {type(exc).__name__}: {exc}')
 
 
 def validate_model(model, model_type, val_loader, criterion, device):
@@ -92,15 +104,8 @@ def validate_model(model, model_type, val_loader, criterion, device):
         for data, label in val_loader:
             data, label = data.to(device), label.to(device)
 
-            if model_type == 'VAE':
-                output, z_mean, z_log_var = model(data)
-                val_loss = vae_loss(output, data, z_mean, z_log_var, data.shape[-1])
-            # elif model_type == 'U-net':
-            #     output = model(data)
-            #     val_loss = mse_loss(output, label)
-            else:
-                output = model(data)
-                val_loss = mse_loss(output, label)
+            output = model(data)
+            val_loss = mse_loss(output, label)
 
             if torch.isnan(output).any():
                 print("NaN detected")

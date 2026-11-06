@@ -8,14 +8,13 @@ from torch.utils.tensorboard import SummaryWriter
 import numpy as np
 import datetime
 import time
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import argparse
-from torchvision.utils import make_grid
 
-from model import ConvAutoencoder, UNet, AutoEncoder, VAE, AE_SNN
 from config import parse_args
 from data_preprocess import DatasetProcessor
-from utils import vis_batch, vae_loss, validate_model, select_model, save_metrics, export_to_onnx
+from utils import vis_batch, validate_model, select_model, save_metrics, export_to_onnx
 
 os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
 
@@ -72,6 +71,7 @@ class TrainingProcessor:
         # 设定初始的最佳损失为一个很大的值
         best_loss = float('inf')
         train_loss = float('inf')
+        current_epoch = None
 
         # Training loop
         # 1.input to model,
@@ -85,15 +85,8 @@ class TrainingProcessor:
             model.train()
             for batch_idx, (data, label) in enumerate(train_loader):
                 data, label = data.to(device), label.to(device)
-                if self.model_type == 'VAE':
-                    output, z_mean, z_log_var = model(data)
-                    loss = vae_loss(output, data, z_mean, z_log_var, data.shape[-1])
-                # elif self.model_type == 'U-net':
-                #     output = model(data)
-                #     loss = criterion(output, label)
-                else:
-                    output = model(data)
-                    loss = criterion(output, label)
+                output = model(data)
+                loss = criterion(output, label)
 
                 optimizer.zero_grad()
                 loss.backward()

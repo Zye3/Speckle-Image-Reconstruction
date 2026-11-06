@@ -13,8 +13,9 @@ def parse_args():
 
     parser.add_argument('--model_type', type=str,
                         default='Att_UNet',
-                        choices=['CNN-AE', 'U-net', 'AE', 'VAE', 'AE-SNN', 'Att_UNet', 'HPM_UNet'],  # CNN-AE (in,256) (out,128)
-                        help='Type of model to train. Default is VAE.')
+                        choices=['CNN-AE', 'U-net', 'AE', 'AE-SNN', 'Att_UNet', 'HPM_UNet'],
+                        help='Type of model to train. Default is Att_UNet. '
+                             'AE and AE-SNN expect 64x64 images.')
 
     parser.add_argument('--code_length', type=int,
                         default=64,
@@ -49,6 +50,14 @@ def parse_args():
     parser.add_argument('--vis', type=bool,
                         default=True,
                         help='Visualization.')
+
+    parser.add_argument('--ckpt', type=str,
+                        default='',
+                        help='Checkpoint path for test.py.')
+
+    parser.add_argument('--out_dir', type=str,
+                        default='',
+                        help='Output directory for test.py. Default is test/<model>_<time>.')
 
     return parser.parse_args()
 

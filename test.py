@@ -1,7 +1,9 @@
+import matplotlib
+matplotlib.use('Agg')
+
 import time
 
 import torch
-from torchvision import transforms
 import numpy as np
 from skimage.metrics import structural_similarity as ssim
 from skimage.metrics import peak_signal_noise_ratio as psnr
@@ -25,7 +27,11 @@ def current_datetime():
 def load_model(model_path, model_type, device):
     """ Load the saved model from a given path """
     model = select_model(model_type, device)
-    model.load_state_dict(torch.load(model_path))
+    try:
+        state = torch.load(model_path, map_location=device, weights_only=True)
+    except TypeError:
+        state = torch.load(model_path, map_location=device)
+    model.load_state_dict(state)
     model.eval()
     return model
 
@@ -69,9 +75,9 @@ def vis(data, label, output, ssim_single, psnr_single, batch_idx,img_index, norm
     norm_data = data
     norm_label = label
     norm_output = output
-    axes[0].imshow(norm_data, cmap='gray')
-    axes[1].imshow(norm_label, cmap='gray')
-    axes[2].imshow(norm_output, cmap='gray')
+    axes[0].imshow(norm_data, cmap='gray', vmin=0, vmax=1)
+    axes[1].imshow(norm_label, cmap='gray', vmin=0, vmax=1)
+    axes[2].imshow(norm_output, cmap='gray', vmin=0, vmax=1)
 
     # Set titles and turn off axis
     axes[0].set_title(f'Input', fontsize=18)
@@ -85,8 +91,9 @@ def vis(data, label, output, ssim_single, psnr_single, batch_idx,img_index, norm
     plt.savefig(f'{log_dir}/Image_{batch_idx}_{img_index}.png')
     plt.close(fig)
 
-    # Create a figure for output images
-    cv2.imwrite(f'{log_dir}/Image_{batch_idx}_{img_index}_output.png', norm_output*normalize_factor)
+    # 8-bit PNG. Values are expected in [0, 1] after the loader.
+    output_u8 = np.clip(np.asarray(norm_output, dtype=np.float32) * 255.0, 0, 255).astype(np.uint8)
+    cv2.imwrite(f'{log_dir}/Image_{batch_idx}_{img_index}_output.png', output_u8)
 
 
 def evaluate_model(model, model_type, dataloader, device, normalize_factor, log_dir, visualize=True):
@@ -100,10 +107,7 @@ def evaluate_model(model, model_type, dataloader, device, normalize_factor, log_
         for batch_idx, (data, target) in enumerate(dataloader):
             a = time.time()
             data, target = data.to(device), target.to(device)
-            if model_type == 'VAE':
-                output, z_mean, z_log_var = model(data)
-            else:
-                output = model(data)
+            output = model(data)
             # print(data.shape, target.shape, output.shape) # data = Input, target = label/GT, output = prediction
             b = time.time()-a
             print(b)
@@ -117,8 +121,8 @@ def evaluate_model(model, model_type, dataloader, device, normalize_factor, log_
                 reconstructed = np.squeeze(output_np[i])
                 input = np.squeeze(input_np[i])
 
-                ssim_single = ssim(label, reconstructed, data_range=label.max() - label.min())
-                psnr_single = psnr(label, reconstructed, data_range=label.max() - label.min())
+                ssim_single = ssim(label, reconstructed, data_range=1.0)
+                psnr_single = psnr(label, reconstructed, data_range=1.0)
 
                 # Append each batch's metrics to the list
                 metrics_list.append([batch_idx, i, ssim_single, psnr_single])
@@ -134,10 +138,9 @@ def evaluate_model(model, model_type, dataloader, device, normalize_factor, log_
     avg_ssim = ssim_total / num_samples
     avg_psnr = psnr_total / num_samples
 
-    # Save all metrics to CSV file
-    metrics_file = os.path.join(log_dir.split('/')[0], log_dir.split('/')[1],
-                                f'1.ssim&psnr',
-                                f'{model_type}_ssim_psnr.csv')
+    metrics_dir = os.path.join(log_dir, 'metrics')
+    os.makedirs(metrics_dir, exist_ok=True)
+    metrics_file = os.path.join(metrics_dir, f'{model_type}_ssim_psnr.csv')
     save_to_csv(metrics_list, metrics_file, ['Batch Index', 'Image Index', 'SSIM', 'PSNR'])
     save_metrics(avg_ssim, avg_psnr, log_dir)  # Save the metrics to a text file
     return avg_ssim, avg_psnr
@@ -149,15 +152,11 @@ def main():
     # Set up the device
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    # Load the model !!! Note: replace the mode_type in the config,py first
-    model_path = (f'runs/'
-                  f'Multi_64_64_0.2_0.1/'
-                  f'Att_UNet_64_0.001_48_90_0.1&0.2_2024-08-15__21-28-29/'
-                  f'{args.model_type}.pth')
-    model = load_model(model_path, args.model_type, device)
+    if not args.ckpt:
+        raise SystemExit('test.py needs --ckpt path/to/model.pth')
+    model = load_model(args.ckpt, args.model_type, device)
 
-    # load log_dir
-    log_dir = f"test/{model_path.split('/')[1]}/{model_path.split('/')[2]}/new_3"
+    log_dir = args.out_dir or f"test/{args.model_type}_{current_datetime()}"
     # Load the dataset
     data_processor = DatasetProcessor(data_path=args.data_dir, batch_size=args.batch_size, log_dir=log_dir,
                                       normalize_factor=args.normalize_factor,
